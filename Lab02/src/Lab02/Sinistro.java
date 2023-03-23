@@ -7,8 +7,7 @@ public class Sinistro{
 		private int numeroInteiroAleatorio_0_a_100;
 		
 		// construtor
-		public Sinistro(int id , String data , String endereco) {
-			
+		public Sinistro(int id , String data , String endereco) {			
 			this.id = random();
 			this.data = data;
 			this.endereco = endereco;

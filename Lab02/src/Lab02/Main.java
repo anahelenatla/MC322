@@ -35,7 +35,7 @@ public class Main {
 		
 		String email =  "seguraesseveiculo@gmail.com";
 		
-		String endSeg =  "Rua da seguradora";
+		String endSeg =  "Rua da seguradora 2";
 		seguradora = new Seguradora(nomeSeg, teleSeg, email, endSeg);
 		
 		System.out.println(cliente);

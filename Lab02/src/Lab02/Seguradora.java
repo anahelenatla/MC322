@@ -11,7 +11,6 @@ public class Seguradora{
 			this.email = email ;
 			this.endereco = endereco ;
 		}
-
 		// getters e setters
 	public String getNome() {
 		return nome;
