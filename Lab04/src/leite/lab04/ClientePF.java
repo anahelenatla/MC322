@@ -2,18 +2,22 @@ package leite.lab04;
 
 import java.util.InputMismatchException;
 import java.util.Date;
+import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.Period;
 
 public class ClientePF extends Cliente {
 	private final String cpf;
 	private String genero;
 	private Date dataLicenca;
 	private String educacao;
-	private Date dataNascimento;
+	private LocalDate dataNascimento;
 	private String classeEconomica;
 	
 	//Construtor da classe ClientePF
 	public ClientePF(String nome, String endereco, String cpf, String genero,
-            Date dataLicenca, String educacao, Date dataNascimento, String classeEconomica) {
+            Date dataLicenca, String educacao, LocalDate dataNascimento, String classeEconomica) {
 		super(nome, endereco);
 		this.cpf = cpf;
 		this.genero = genero;
@@ -54,11 +58,11 @@ public class ClientePF extends Cliente {
 		this.educacao = educacao;
 	}
 
-	public Date getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 	
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 	
@@ -70,61 +74,38 @@ public class ClientePF extends Cliente {
 		this.classeEconomica = classeEconomica;
 	}
 	
-	
-	public static boolean validarCPF(String cpf) {
+	public int calcularIdade(LocalDate dataNascimento) {
+	    LocalDate dataAtual = LocalDate.now();
+	    if(dataNascimento != null) {
+	    	Period periodo = Period.between(dataNascimento, dataAtual);
+		    System.out.println(dataNascimento);
+		    return periodo.getYears();
+	    }else {
+	    	return 0;
+	    }
+	    
 		
-		cpf = cpf.replaceAll("\\D","");
-		System.out.println(cpf);
-		if(cpf.length() != 11) {
-			return false;
-		}
-		if (cpf.equals("00000000000") || cpf.equals("11111111111") || cpf.equals("22222222222") || cpf.equals("33333333333") ||
-				cpf.equals("44444444444") || cpf.equals("55555555555") ||
-				cpf.equals("66666666666") || cpf.equals("77777777777") ||cpf.equals("88888888888") || cpf.equals("99999999999") ) {
-			return(false);
-		}
-		char dig10, dig11;
-	    int sm, i, r, num, peso;
-		try {
-	        // Calculo do 1o. Digito Verificador
-	            sm = 0;
-	            peso = 10;
-	            for (i=0; i<9; i++) {
-	        // converte o i-esimo caractere do CPF em um numero:
-	        // por exemplo, transforma o caractere '0' no inteiro 0
-	        // (48 eh a posicao de '0' na tabela ASCII)
-	            num = (int)(cpf.charAt(i) - 48);
-	            sm = sm + (num * peso);
-	            peso = peso - 1;
-	            }
-
-	            r = 11 - (sm % 11);
-	            if ((r == 10) || (r == 11))
-	                dig10 = '0';
-	            else dig10 = (char)(r + 48); // converte no respectivo caractere numerico
-
-	        // Calculo do 2o. Digito Verificador
-	            sm = 0;
-	            peso = 11;
-	            for(i=0; i<10; i++) {
-	            num = (int)(cpf.charAt(i) - 48);
-	            sm = sm + (num * peso);
-	            peso = peso - 1;
-	            }
-
-	            r = 11 - (sm % 11);
-	            if ((r == 10) || (r == 11))
-	                 dig11 = '0';
-	            else dig11 = (char)(r + 48);
-
-	        // Verifica se os digitos calculados conferem com os digitos informados.
-	            if ((dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10)))
-	                 return(true);
-	            else return(false);
-	                } catch (InputMismatchException erro) {
-	                return(false);
-	            }		
 	}
+	int idade = calcularIdade(dataNascimento);
+	
+	public double calculaScore() {
+	    double fatorIdade = 1.0;
+	    
+	    if (idade < 18 || idade > 90) {
+	        // Pessoas com idade abaixo de 18 ou acima de 90 anos não são elegíveis para seguro
+	        return 0.0;
+	    } else if (idade < 30) {
+	        fatorIdade = CalcSeguro.FATOR_18_30.getValor();
+	    } else if (idade < 60) {
+	        fatorIdade = CalcSeguro.FATOR_30_60.getValor();
+	    } else {
+	        fatorIdade = CalcSeguro.FATOR_60_90.getValor();
+	    }
+	    
+	    return CalcSeguro.VALOR_BASE.getValor() * fatorIdade * quantidadeVeiculos;
+	}
+
+	
 	
 	public String toString() {
 		return " Informações do cliente (PF):" +
