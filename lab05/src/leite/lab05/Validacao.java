@@ -128,5 +128,4 @@ public class Validacao {
 	    return true;
 	}
 
-	//todos os métodos static
 }

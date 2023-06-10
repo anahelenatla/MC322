@@ -1,21 +1,24 @@
 package leite.lab05;
 import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class Seguradora {
 	private String nome;
 	private String telefone;
 	private String email;
 	private String endereco;
+	private String cnpj;
+	private ArrayList<Seguro> listaSeguros;
 	protected ArrayList<Cliente> listaClientes; 
-	private static ArrayList<Sinistro> listaSinistros;
 	// construtor
-	public Seguradora(String nome , String telefone , String email , String endereco) {
+	public Seguradora(String nome , String telefone , String email , String endereco, String cnpj) {
 		this.nome = nome ;
 		this.telefone = telefone ;
 		this.email = email ;
 		this.endereco = endereco ;
+		this.cnpj = cnpj;
 		this.listaClientes = new ArrayList<>();
-		this.listaSinistros = new ArrayList<>();
+		this.listaSeguros = new ArrayList<>();
 }
 
 		// getters e setters
@@ -25,6 +28,14 @@ public class Seguradora {
 	
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String getCnpj() {
+		return cnpj;
+	}
+	
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
 	}
 	
 	public String getTelefone() {
@@ -51,8 +62,8 @@ public class Seguradora {
 		this.endereco = endereco;
 	}
 	
-	public ArrayList<Sinistro> getListaSinistros() {
-		return listaSinistros;
+	public ArrayList<Seguro> getListaSeguros() {
+		return listaSeguros;
 	}
 	public boolean cadastrarCliente(Cliente cliente) {
 		boolean sucesso = listaClientes.add(cliente);
@@ -60,7 +71,7 @@ public class Seguradora {
 			System.out.println("Cliente "+ cliente.getNome()+" cadastrado com sucesso!");
 			
 		} else {
-			System.out.println("Erro ao cadastrar cliente" + cliente.getNome());
+			System.out.println("Erro ao cadastrar cliente " + cliente.getNome() + ".");
 		}
 		return sucesso;
 	}
@@ -69,7 +80,7 @@ public class Seguradora {
 		if(sucesso) {
 			System.out.println("Cliente " + cliente.getNome()+ " removido com sucesso.");
 		} else {
-			System.out.println("Erro ao remover cliente " + cliente.getNome());
+			System.out.println("Erro ao remover cliente " + cliente.getNome() + ".");
 		}
 		return sucesso;
 	}
@@ -92,92 +103,114 @@ public class Seguradora {
 		}
 		return clientesPJ;
 	}
-	public ArrayList<? extends Cliente> listarClientes(String tipoCliente){
-		if(tipoCliente.equals("PF")) {
-			return listarClientesPF();
-		} else if(tipoCliente.equals("PJ")) {
-			return listarClientesPJ();
-		}else if(tipoCliente.equals("todos")) {
-			return listaClientes;
-		}else {
-			return null;
+	public void listarClientes(){
+		System.out.println("\nClientes do tipo PF: ");
+		for (ClientePF cliente : listarClientesPF()) {
+			System.out.println("\n-" + cliente.toString());
 		}
-	}
-	public boolean gerarSinistro(Cliente cliente, Veiculo veiculo, String tipoSinistro) {
-		if (!this.listaClientes.contains(cliente) || !cliente.getListaVeiculos().contains(veiculo)) {
-			return false;
+		System.out.println("\nClientes do tipo PJ: ");
+		for (ClientePJ cliente : listarClientesPJ()) {
+			System.out.println("\n-" + cliente.toString());
 		}
-		Sinistro novoSinistro = new Sinistro(0, "11/12/2023", "lugar do sinistro", this, veiculo, cliente);
-		this.listaSinistros.add(novoSinistro);
-		return true;
-	}
-	public boolean visualizarSinitro(Cliente cliente) {
-		for(Sinistro sinistro : listaSinistros) {
-			if(sinistro.getCliente().equals(cliente)) {
-				System.out.println("Sinisro encontrado: "+ sinistro.getId());
-				return true;
-			}
-		}
-		System.out.println("CLiente "+ cliente.getNome() + " não possui sinistros.");
-		return false;
-	}
-	public static boolean removeSinistro(Sinistro sinistro) {
-		for(Sinistro sinistro1: listaSinistros) {
-			if(sinistro1.equals(sinistro)) {
-				listaSinistros.remove(sinistro);
-				System.out.println("Sinisro removido com sucesso.");
-				return true;
-			}
-		}
-		System.out.println("Erro ao remover o sinistro.");
-		return false;
-	}
-	public ArrayList<Sinistro> listarSinistros(){
-		return listaSinistros;
 	}
 	
-	public int quantSinistrosCliente(Cliente cliente) {
-	    int count = 0;
-	    for (Sinistro sinistro : this.listaSinistros) {
-	        if (sinistro.getCliente().equals(cliente)) {
-	            count++;
-	        }
-	    }
-	    return count;
-	}
 
-	public double calcularPrecoSeguroCliente(Cliente cliente) {
-		int quantidadeSinistros = quantSinistrosCliente(cliente);
-		double score = cliente.calculaScore();
-		double preco = score * (1 + quantidadeSinistros);
-		return preco;
+	public ArrayList<Sinistro> getSinistrosPorCliente(String cliente){
+		ArrayList<Sinistro> sinistrosPorCliente = new ArrayList<>();
+		for (Seguro seguro : listaSeguros) {
+			if (seguro instanceof SeguroPF) {
+				SeguroPF seguroPF = (SeguroPF) seguro;
+				if (seguroPF.getCliente().getNome().equals(cliente)) {
+					sinistrosPorCliente.addAll(seguroPF.getListaSinistros());
+				}
+			} else if (seguro instanceof SeguroPJ) {
+				SeguroPJ seguroPJ = (SeguroPJ) seguro;
+				if (seguroPJ.getCliente().getNome().equals(cliente)) {
+					sinistrosPorCliente.addAll(seguroPJ.getListaSinistros());
+				}
+			}
+		}
+		if(sinistrosPorCliente.size() == 0) {
+			System.out.println("O(A) cliente " + cliente + " não possui sinistros.");
+		} else {
+			System.out.println("O(A) cliente " + cliente + " possui o(s) seguinte(s) sinistro(s): \n");
+			for(Sinistro sinistro : sinistrosPorCliente) {
+				sinistro.toString();
+			}
+		}
+		
+		return sinistrosPorCliente;
+	}
+	
+	public boolean gerarSeguro(LocalDate dataInicio, LocalDate dataFim, double valorMensal, Cliente cliente, Frota frota) {
+		if(cliente instanceof ClientePF) {
+			SeguroPF seguroPF = new SeguroPF(0, dataInicio, dataFim, this, valorMensal, (ClientePF) cliente);
+			listaSeguros.add(seguroPF);
+			return true;
+		} else if(cliente instanceof ClientePJ) {
+			SeguroPJ seguroPJ = new SeguroPJ(0, this, dataInicio, dataFim, frota, (ClientePJ) cliente, valorMensal);
+			listaSeguros.add(seguroPJ);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean cancelarSeguro(Seguro seguro) {
+		return listaSeguros.remove(seguro);
+	}
+	
+	public ArrayList<Seguro> getSegurosPorCliente(Cliente cliente){
+		ArrayList<Seguro> segurosPorCliente = new ArrayList<>();
+		for (Seguro seguro : listaSeguros) {
+			if (seguro instanceof SeguroPF) {
+				if (seguro.getCliente().equals(cliente)) {
+					segurosPorCliente.add(seguro);
+				}
+			} else if (seguro instanceof SeguroPJ) {
+				if (seguro.getCliente().equals(cliente)) {
+					segurosPorCliente.add(seguro);
+				}			
+			}
+		}
+		return segurosPorCliente;
 	}
 	
 	public double calcularReceita() {
 		double receitaTotal = 0.0;
-		if(this.listaClientes != null) {
-			for(Cliente cliente : this.listaClientes) {
-				double precoSeguro = this.calcularPrecoSeguroCliente(cliente);
+		if(this.listaSeguros != null) {
+			for(Seguro seguro : this.listaSeguros) {
+				double precoSeguro = seguro.getValorMensal();
 				receitaTotal += precoSeguro;
 			}
 		}
-		System.out.println("A receita é de " + receitaTotal + "reais");
+		System.out.println("A receita é de " + receitaTotal + " reais.");
 		return receitaTotal;
 	}
 	double receitaTotal = calcularReceita();
 	
-	public Sinistro getUltimoSinistro() {
-		if(this.listaSinistros.isEmpty()) {
-			return null;
-		} else {
-			return this.listaSinistros.get(this.listaSinistros.size() - 1);
-		}
+	
+	
+	
+	public static String imprimeCNPJ(String CNPJ) {
+		// máscara do CNPJ: 99.999.999.9999-99
+		    return(CNPJ.substring(0, 2) + "." + CNPJ.substring(2, 5) + "." +
+		      CNPJ.substring(5, 8) + "." + CNPJ.substring(8, 12) + "-" +
+		      CNPJ.substring(12, 14));
 	}
-	
-	
 	public String toString() {
-		return "Receita da Seguradora: " + receitaTotal;
+
+	        return  "\nNome da Seguradora: " + this.nome + 
+	        		"\nTelefone da Seguradora: " + this.telefone + 
+	        		"\nEmail da Seguradora: " + this.email + 
+	        		"\nEndereço da Seguradora: " + this.endereco + 
+	        		"\nCNPJ da Seguradora: " + imprimeCNPJ(this.cnpj) + 
+	        		"\nNúmero de seguros da Seguradora: " + this.listaSeguros.size() + 
+	        		"\nNúmero de clientes da Seguradora: " + this.listaClientes.size() + 
+	        		"\nReceita da Seguradora: " + this.receitaTotal;
+
+	        		
 	}
+
 	
 }
 

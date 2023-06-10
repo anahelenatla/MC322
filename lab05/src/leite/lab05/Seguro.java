@@ -7,9 +7,9 @@ public abstract class Seguro {
 	private final int id;
 	private LocalDate dataInicio;
 	private LocalDate dataFim;
-	private Seguradora seguradora;
+	protected Seguradora seguradora;
 	private ArrayList<Sinistro> listaSinistros;
-	private ArrayList<Condutor> listaCondutores;
+	protected ArrayList<Condutor> listaCondutores;
 	private double valorMensal;
 	
 	public Seguro(Seguradora seguradora, LocalDate dataInicio, LocalDate dataFim, double valorMensal) {
@@ -58,21 +58,36 @@ public abstract class Seguro {
 		this.valorMensal = valorMensal;
 	}
 	
-	public void autorizarCondutor(Condutor condutor) {
-		return listaCondutores.add(condutor);
-	}
+	public abstract boolean autorizarCondutor(Condutor condutor);
 	
-	public void desautorizarCondutor(Condutor condutor) {
-		return listaCondutores.remove(condutor);
-	}
+	public abstract boolean desautorizarCondutor(Condutor condutor);
 	
-	public abstract boolean calcularValor();
+	public abstract double calcularValor();
 	
-	public abstract boolean gerarSinistro(Sinistro sinistro);
+	public abstract boolean gerarSinistro(int id , LocalDate data , String endereco, Seguradora seguradora, Veiculo veiculo, Condutor condutor, Seguro seguro);
 	
 	public int gerarId() {
 		Random random = new Random();
 		return random.nextInt(1000);
 	}
 	
+	public Sinistro getUltimoSinistro() {
+		if(this.listaSinistros.isEmpty()) {
+			return null;
+		} else {
+			return this.listaSinistros.get(this.listaSinistros.size() - 1);
+		}
+	}
+	
+	public String toString() {
+		return "Id do seguro: " + this.id +
+				"\nData de início do seguro: " + this.dataInicio + 
+				"\nData final do seguro: " + this.dataFim + 
+				"\nNome da seguradora: " + this.seguradora.getNome() + 
+				"\nLista de sinistros do seguro: " + this.listaSinistros.size() + 
+				"\nNúmero condutores do seguro: " + this.listaCondutores.size(); 
+	}
+
+	protected abstract Cliente getCliente();
+
 }

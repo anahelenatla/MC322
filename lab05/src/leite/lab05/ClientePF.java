@@ -13,22 +13,18 @@ import java.util.ArrayList;
 public class ClientePF extends Cliente {
 	private final String cpf;
 	private String genero;
-	//private Date dataLicenca;
 	private String educacao;
 	private LocalDate dataNascimento;
-	private ArrayList<Veiculo> listaVeiculos;
-	//private String classeEconomica;
+	ArrayList<Veiculo> listaVeiculos;
 	
 	//Construtor da classe ClientePF
 	public ClientePF(String nome, String telefone, String endereco, String email, String cpf, String genero, String educacao, LocalDate dataNascimento) {
 		super(nome, telefone, endereco, email);
 		this.cpf = cpf;
 		this.genero = genero;
-		//this.dataLicenca = dataLicenca;
 		this.educacao = educacao;
 		this.dataNascimento = dataNascimento;
 		this.listaVeiculos = new ArrayList<>();
-		//this.classeEconomica = classeEconomica;
 	}
 	
 	//Getters e Setters
@@ -72,23 +68,11 @@ public class ClientePF extends Cliente {
 		this.listaVeiculos = listaVeiculos;
 	}
 	
-	/*
-	public Date getDataLicenca() {
-		return dataLicenca;
-	}
-	
-	public void setDataLicenca(Date dataLicenca) {
-		this.dataLicenca = dataLicenca;
-	}
-	public String getClasseEconomica() {
-		return classeEconomica;
-	}
-	
-	public void setClasseEconomica(String classeEconomica) {
-		this.classeEconomica = classeEconomica;
-	}
-	*/
-	public int calcularIdade(LocalDate dataNascimento) {
+	public int calcularIdade() {
+		LocalDate dataNascimento = this.dataNascimento;
+		if (dataNascimento == null){
+			return 0;
+		}
 	    LocalDate dataAtual = LocalDate.now();
 	    if(dataNascimento != null) {
 	    	Period periodo = Period.between(dataNascimento, dataAtual);
@@ -100,25 +84,11 @@ public class ClientePF extends Cliente {
 	    
 		
 	}
-	int idade = calcularIdade(dataNascimento);
-	/*
-	public double calculaScore() {
-	    double fatorIdade = 1.0;
-	    
-	    if (idade < 18 || idade > 90) {
-	        // Pessoas com idade abaixo de 18 ou acima de 90 anos não são elegíveis para seguro
-	        return 0.0;
-	    } else if (idade < 30) {
-	        fatorIdade = CalcSeguro.FATOR_18_30.getValor();
-	    } else if (idade < 60) {
-	        fatorIdade = CalcSeguro.FATOR_30_60.getValor();
-	    } else {
-	        fatorIdade = CalcSeguro.FATOR_60_90.getValor();
-	    }
-	    
-	    return CalcSeguro.VALOR_BASE.getValor() * fatorIdade * quantidadeVeiculos;
+	int idade = calcularIdade();
+	public int getIdade() {
+		return idade;
 	}
-	*/
+	
 	public boolean cadastrarVeiculo(Veiculo veiculo) {
 		return listaVeiculos.add(veiculo);
 	}
@@ -134,12 +104,7 @@ public class ClientePF extends Cliente {
                 ",\nGênero: " + genero +                 
                 ",\nEducacao: " + educacao + 
                 ",\nData de nascimento: " + dataNascimento;
-                /* +
-                "\nVeículos do cliente: " ;
-			for (Veiculo veiculo : listaVeiculos) {
-				System.out.println("\n-" + veiculo.toString());
-			}
-                */    
+
    	}
 	
 }

@@ -75,4 +75,14 @@ public class Condutor {
 	public void adicionarSinistro(Sinistro sinistro) {
 		listaSinistros.add(sinistro);
 	}
+	public String toString() {
+	        return  "\nCPF do condutor: " + this.cpf + 
+	        		"\nNome do condutor: " + this.nome + 
+	        		"\nTelefone do condutor: " + this.telefone + 
+	        		"\nEndereco do condutor: " + this.endereco + 
+	        		"\nEmail do condutor: " + this.email + 
+	        		"\nData de nascimento do condutor: " + this.dataNasc + 
+	        		"\nNúmero de sinistros do condutor: " + this.listaSinistros.size();
+	        		
+	}
 }

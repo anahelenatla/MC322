@@ -1,23 +1,23 @@
 package leite.lab05;
 import java.util.Random;
+import java.time.LocalDate;
+
 public class Sinistro {	
-	private int id;
-	private String data;
+	private final int id;
+	private LocalDate data;
 	private String endereco;
 	private int numeroInteiroAleatorio_0_a_100;
-	private Seguradora seguradora;
-	private Veiculo veiculo;
-	private Cliente cliente;
+	private Condutor condutor;
+	private Seguro seguro;
 	
 	// construtor
-	public Sinistro(int id , String data , String endereco, Seguradora seguradora, Veiculo veiculo, Cliente cliente) {
+	public Sinistro(int id , LocalDate data , String endereco, Seguradora seguradora, Veiculo veiculo, Condutor condutor, Seguro seguro) {
 		
 		this.id = random();
 		this.data = data;
 		this.endereco = endereco;
-		this.seguradora = seguradora;
-		this.veiculo = veiculo;
-		this.cliente = cliente;
+		this.condutor = condutor;
+		this.seguro = seguro;
 	}	
 		
 		// função geradora de identificadores (inteiro de 0 a 100)
@@ -32,14 +32,14 @@ public class Sinistro {
 		
 		// getters e setters
 	public int getId() {
-			return id;
+		return id;
 	}
 	
-	public String getData() {
+	public LocalDate getData() {
 		return data;
 	}
 	
-	public void setData(String data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 	
@@ -51,30 +51,24 @@ public class Sinistro {
 		this.endereco = endereco;
 	}
 	
-	public Seguradora getSeguradora() {
-		return seguradora;
+	
+	public Condutor getCondutor() {
+		return condutor;
 	}
 	
-	public void setSeguradora(Seguradora seguradora) {
-		this.seguradora = seguradora;
-	}
-	public Veiculo getVeiculo() {
-		return veiculo;
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
 	}
 	
-	public void setVeiculo(Veiculo veiculo) {
-		this.veiculo = veiculo;
-	}
-	public Cliente getCliente() {
-		return cliente;
+	public Seguro getSeguro() {
+		return seguro;
 	}
 	
-	public void setCliente(Cliente veiculo) {
-		this.cliente = cliente;
+	public void setSeguro(Seguro seguro) {
+		this.seguro = seguro;
 	}
-	
 	public String toString() {
-		return "Sinistro: id = " + id + "\nData = " + data + "\nEndereço = " + endereco;
+		return "Sinistro: id = " + id + "\nData = " + data + "\nEndereço = " + endereco + "\nSeguro = " + seguro;
 	}
 
 }

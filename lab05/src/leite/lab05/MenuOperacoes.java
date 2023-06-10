@@ -4,7 +4,6 @@ public enum MenuOperacoes {
 	CADASTROS("1 - Cadastros", new SubmenuOpcoes[]{
 		SubmenuOpcoes.CADASTRAR_CLIENTE,
 		SubmenuOpcoes.CADASTRAR_VEICULO,
-		SubmenuOpcoes.CADASTRAR_SEGURADORA,
 		SubmenuOpcoes.VOLTAR
 	}),
 	LISTAR("2 - Listar", new SubmenuOpcoes[] {
@@ -17,12 +16,10 @@ public enum MenuOperacoes {
 	EXCLUIR("3 - Excluir",  new SubmenuOpcoes[] {
 			SubmenuOpcoes.EXCLUIR_CLIENTE,
 			SubmenuOpcoes.EXCLUIR_VEICULO,
-			SubmenuOpcoes.EXCLUIR_SINISTRO,
 			SubmenuOpcoes.VOLTAR
 	}),
-	GERAR_SINISTRO("4 - Gerar Sinistro", new SubmenuOpcoes[] {SubmenuOpcoes.VOLTAR}),
-	TRANSFERIR_SEGURO("5 - Transferir Seguro", new SubmenuOpcoes[] {SubmenuOpcoes.VOLTAR}),
-	CALCULAR_RECEITA("6 - Calcular Receita", new SubmenuOpcoes[] {SubmenuOpcoes.VOLTAR}),
+	GERAR_SEGURO("4 - Gerar Seguro", new SubmenuOpcoes[] {SubmenuOpcoes.VOLTAR}),
+	CALCULAR_RECEITA("5 - Calcular Receita", new SubmenuOpcoes[] {SubmenuOpcoes.VOLTAR}),
 	SAIR("7 - Sair", new SubmenuOpcoes[] {});
 
 	// atributos
